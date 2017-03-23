@@ -22,9 +22,9 @@
             <li><a href="/">Home</a></li>
             <li><a href="/user">Benutzer</a></li>
             <li><a href="/user/create">Benutzer erstellen</a></li>
+            <li><a href="/user/login">Anmelden</a></li>
           </ul>
         </div>
       </div>
     </nav>
-
     <div class="container">

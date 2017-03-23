@@ -30,6 +30,7 @@ class UserRepository extends Repository
      */
     public function create($username, $email, $password)
     {
+        session_start();
         if(count($this->readByUsername($username)) < 1) {
             $query = "INSERT INTO $this->tableName (username, email, password) VALUES (?, ?, ?)";
 
@@ -40,18 +41,20 @@ class UserRepository extends Repository
                 throw new Exception($statement->error);
             }
 
+            $_SESSION['isSuccess'] = true;
+
             return $statement->insert_id;
         } else {
-            session_start();
-            $_SESSION['error'] = true;
+            $_SESSION['isSuccess'] = false;
         }
     }
 
     public function readByUsername($username)
     {
-        $query = "SELECT * FROM {$this->tableName} WHERE username = '$username'";
+        $query = "SELECT * FROM $this->tableName WHERE username = ?";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('s', $username);
         $statement->execute();
 
         $result = $statement->get_result();
@@ -65,5 +68,30 @@ class UserRepository extends Repository
         }
 
         return $rows;
+    }
+
+    public function login($username, $password)
+    {
+        $query = "SELECT password FROM $this->tableName WHERE username = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('s', $username);
+        $statement->execute();
+
+        $result = $statement->get_result();
+        if(!$result) {
+            throw new Exception($statement->error);
+        }
+
+        $userPW = "";
+        while($row = $result->fetch_object()) {
+            $userPW = $row->password;
+        }
+
+        if(password_verify($password, $userPW)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
