@@ -28,19 +28,42 @@ class UserRepository extends Repository
      *
      * @throws Exception falls das Ausführen des Statements fehlschlägt
      */
-    public function create($firstName, $lastName, $email, $password)
+    public function create($username, $email, $password)
     {
-        $password = sha1($password);
+        if(count($this->readByUsername($username)) < 1) {
+            $query = "INSERT INTO $this->tableName (username, email, password) VALUES (?, ?, ?)";
 
-        $query = "INSERT INTO $this->tableName (firstName, lastName, email, password) VALUES (?, ?, ?, ?)";
+            $statement = ConnectionHandler::getConnection()->prepare($query);
+            $statement->bind_param('sss', $username, $email, $password);
+
+            if (!$statement->execute()) {
+                throw new Exception($statement->error);
+            }
+
+            return $statement->insert_id;
+        } else {
+            session_start();
+            $_SESSION['error'] = true;
+        }
+    }
+
+    public function readByUsername($username)
+    {
+        $query = "SELECT * FROM {$this->tableName} WHERE username = '$username'";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('ssss', $firstName, $lastName, $email, $password);
+        $statement->execute();
 
-        if (!$statement->execute()) {
+        $result = $statement->get_result();
+        if(!$result) {
             throw new Exception($statement->error);
         }
 
-        return $statement->insert_id;
+        $rows = array();
+        while($row = $result->fetch_object()) {
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 }

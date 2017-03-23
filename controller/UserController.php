@@ -11,9 +11,12 @@ class UserController
     {
         $userRepository = new UserRepository();
 
+        session_start();
+
         $view = new View('user_index');
         $view->title = 'Benutzer';
         $view->heading = 'Benutzer';
+        $view->error = isset($_SESSION['error']) ? $_SESSION['error'] : false;
         $view->users = $userRepository->readAll();
         $view->display();
     }
@@ -29,14 +32,12 @@ class UserController
     public function doCreate()
     {
         if ($_POST['send']) {
-            $firstName = $_POST['firstName'];
-            $lastName = $_POST['lastName'];
+            $username = $_POST['username'];
             $email = $_POST['email'];
-            // $password  = $_POST['password'];
-            $password = 'no_password';
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
             $userRepository = new UserRepository();
-            $userRepository->create($firstName, $lastName, $email, $password);
+            $userRepository->create($username, $email, $password);
         }
 
         // Anfrage an die URI /user weiterleiten (HTTP 302)
