@@ -18,7 +18,7 @@ $form = new Form('/user/doCreate');
 
 echo $form->text()->label('Username')->name('username');
 echo $form->text()->label('Email')->name('email')->pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$');
-echo $form->password()->label('Passwort')->name('passwort')->onkeyup('checkPW()');
+echo $form->password()->label('Passwort')->name('password')->onkeyup('checkPW()');
 echo $form->password()->label('Passwort wiederholen')->name('passwort_wiederholen')->onkeyup('checkPW()');
 echo $form->submit()->label('Benutzer erstellen')->name('send');
 
