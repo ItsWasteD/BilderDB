@@ -79,19 +79,15 @@ class UserRepository extends Repository
         $statement->execute();
 
         $result = $statement->get_result();
-        if(!$result) {
+        if (!$result) {
             throw new Exception($statement->error);
         }
 
         $userPW = "";
-        while($row = $result->fetch_object()) {
+        while ($row = $result->fetch_object()) {
             $userPW = $row->password;
         }
 
-        if(password_verify($password, $userPW)) {
-            return true;
-        } else {
-            return false;
-        }
+        return password_verify($password, $userPW);
     }
 }

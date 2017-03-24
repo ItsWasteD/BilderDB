@@ -11,8 +11,6 @@ class UserController
     {
         $userRepository = new UserRepository();
 
-        session_start();
-
         $view = new View('user_index');
         $view->title = 'Benutzer';
         $view->heading = 'Benutzer';
@@ -87,5 +85,11 @@ class UserController
                 header("Location: /user/login");
             }
         }
+    }
+
+    public function logout() {
+        session_start();
+        session_destroy();
+        header("Location: /");
     }
 }
