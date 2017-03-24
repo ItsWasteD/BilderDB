@@ -1,6 +1,7 @@
 <?php
 
 require_once '../lib/Repository.php';
+require_once 'PictureRepository.php';
 
 /**
  * Created by PhpStorm.
@@ -11,5 +12,12 @@ require_once '../lib/Repository.php';
 class GalleryRepository extends Repository {
 
     protected $tableName = 'galleries';
+
+    public function readThumbnailByAlbumId($id)
+    {
+        $pictureRepository = new PictureRepository();
+        $path = $pictureRepository->readById($id)->path;
+        return $path;
+    }
 
 }

@@ -6,10 +6,11 @@
 	</div>
 <?php } else {
     foreach ($galleries as $key => $gallery) {
+        $path = $db->readThumbnailByAlbumId($gallery->id);
         if($key % 4 == 0) {
             echo "<br>";
         }
-        echo "<img src='$gallery->path' class='img-thumbnail' width='300' height='300' >";
+        echo "<img src='$path' class='img-thumbnail' width='300' height='300' >";
     }
 }
 ?>
