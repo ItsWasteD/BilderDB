@@ -16,6 +16,7 @@ class GalleryController
         $view = new View("gallery_index");
         $view->title = "Gallery";
         $view->heading = "Gallery";
+        $view->style = "/css/gallery.css";
         $view->galleries = $galleryRepository->readAll();
         $view->display();
     }

@@ -1,7 +1,7 @@
-#BilderDB WasteD
+# BilderDB WasteD
 ## Todo:
 ### Important
-* Display galleries
+* Display galleries + [nice looking](https://www.w3schools.com/bootstrap/bootstrap_images.asp)
 * [Preview](https://www.w3schools.com/bootstrap/bootstrap_images.asp "W3C")
 ### Optional:
 * [Carousel](https://www.w3schools.com/bootstrap/bootstrap_carousel.asp "W3C")

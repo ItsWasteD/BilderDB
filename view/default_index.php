@@ -1,3 +1,5 @@
-<h1>Bilder Datenbank</h1>
-<p>Um Bilder zu posten registrieren Sie sich bitte <a href="/user/create">hier</a>.</p><br>
-<p>Sie besitzen bereits einen Account? Melden Sie sich <a href="/user/login">hier an</a>.</p>
+<div class="jumbotron">
+    <h1>Bilder Datenbank</h1>
+    <p>Die ist ein GIBB Projekt von David Roth welches wir im Rahmen vom 9.3 bis zum 31.4 machen mussten.</p>
+    <p class="bg-primary">Um Gallerien zu erstellen musst du dich zuerst Registrieren klicke oben auf Gallery</p>
+</div>
