@@ -13,11 +13,25 @@ class GalleryRepository extends Repository {
 
     protected $tableName = 'galleries';
 
-    public function readThumbnailByAlbumId($id)
+    public function create($username, $email, $password)
     {
-        $pictureRepository = new PictureRepository();
-        $path = $pictureRepository->readById($id)->path;
-        return $path;
+        session_start();
+        if(count($this->readByUsername($username)) < 1) {
+            $query = "INSERT INTO $this->tableName (username, email, password) VALUES (?, ?, ?)";
+
+            $statement = ConnectionHandler::getConnection()->prepare($query);
+            $statement->bind_param('sss', $username, $email, $password);
+
+            if (!$statement->execute()) {
+                throw new Exception($statement->error);
+            }
+
+            $_SESSION['isSuccess'] = true;
+
+            return $statement->insert_id;
+        } else {
+            $_SESSION['isSuccess'] = false;
+        }
     }
 
 }

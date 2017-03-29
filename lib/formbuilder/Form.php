@@ -4,7 +4,7 @@ class Form
 {
     public function __construct($action = '#', $method = 'POST')
     {
-        echo "<br><form class=\"form-horizontal\" action=\"$action\" method=\"$method\">";
+        echo "<br><form class=\"form-horizontal\" enctype=\"multipart/form-data\" action=\"$action\" method=\"$method\">";
         echo '  <div class="component" data-html="true">';
     }
 
