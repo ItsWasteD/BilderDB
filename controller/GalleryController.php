@@ -10,19 +10,23 @@ require_once '../repository/GalleryRepository.php';
 
 class GalleryController
 {
-    public function index() {
-        $galleryRepository = new GalleryRepository();
 
+    public function index() {
+
+        $galleryRepository = new GalleryRepository();
         $view = new View("gallery_index");
         $view->title = "Gallery";
         $view->style = "/css/gallery.css";
         session_start();
-        if(isset($_SESSION['info'])) {
-            $view->info = $_SESSION['info'];
-            unset($_SESSION['info']);
+        if(isset($_SESSION['isSuccess'])) {
+            if($_SESSION['isSuccess']) {
+                $view->info = true;
+            } else {
+                $view->info = false;
+            }
+            unset($_SESSION['isSuccess']);
         }
         $view->galleries = $galleryRepository->readAll();
-        $view->pictureRepo = new PictureRepository();
         $view->display();
     }
 
@@ -33,6 +37,22 @@ class GalleryController
     }
 
     public function doAdd() {
+
+        if($_POST['send']) {
+            $galleryRepository = new GalleryRepository();
+            session_start();
+
+            $name = $_POST['galleriename'];
+            $user_id = $_SESSION['uid'];
+
+            $galleryRepository->create($name, $user_id);
+        }
+
+        header("Location: /gallery");
+
+    }
+
+    public function picdoAdd() {
         $upload_dir = "images/";
         $upload_file = $upload_dir . basename($_FILES['file']['name']);
         $upload_ok = 1;

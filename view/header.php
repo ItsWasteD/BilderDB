@@ -10,7 +10,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link href="<?= $style ?>" rel="stylesheet">
+    <link href="<?= isset($style) ? $style : "" ?>" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 </head>
 <body>
@@ -30,7 +30,7 @@
                 session_start();
             }
             if (isset($_SESSION['logedIn']) && $_SESSION['logedIn']) { ?>
-                <p class="navbar-text">Angemeldet als <?= htmlentities($_SESSION['username']) ?></p>
+                <p class="navbar-text">Angemeldet als <?= htmlentities($_SESSION['email']) ?></p>
                 <li><a href="/user/logout"><span class="glyphicon glyphicon-log-out"></span> Abmelden</a></li>
             <?php } else { ?>
                 <li><a href="/user/create"><span class="glyphicon glyphicon-user"></span> Registrieren</a></li>

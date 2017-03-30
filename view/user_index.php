@@ -13,10 +13,9 @@
     <?php foreach ($users as $user): ?>
 
     <div class="panel panel-default">
-        <div class="panel-heading"><?= htmlentities($user->username); ?></div>
+        <div class="panel-heading"><?= htmlentities($user->email); ?></div>
         <div class="panel-body">
-            <p>In der Datenbank existiert ein User mit dem Namen <?= htmlentities($user->username); ?>. Dieser hat
-                die EMail-Adresse: <a href="mailto:<?= htmlentities($user->email); ?>"><?= htmlentities($user->email); ?></a></p>
+            <p>In der Datenbank existiert ein User mit der Email: <a href="mailto:<?= htmlentities($user->email); ?>"><?= htmlentities($user->email); ?></a></p>
             <p><a title="Löschen" href="/user/delete?id=<?= $user->id ?>">Löschen</a></p>
         </div>
     </div>

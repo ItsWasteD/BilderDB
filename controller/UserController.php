@@ -33,12 +33,11 @@ class UserController
     public function doCreate()
     {
         if ($_POST['send']) {
-            $username = $_POST['username'];
             $email = $_POST['email'];
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
             $userRepository = new UserRepository();
-            $userRepository->create($username, $email, $password);
+            $userRepository->create($email, $password);
         }
 
         // Anfrage an die URI /user weiterleiten (HTTP 302)
@@ -68,18 +67,19 @@ class UserController
 
     public function doLogin() {
         if ($_POST['send']) {
-            $username = $_POST['username'];
+            $email = $_POST['email'];
             $password = $_POST['password'];
 
             $userRepository = new UserRepository();
-            $loginState = $userRepository->login($username,$password);
+            $loginState = $userRepository->login($email,$password);
 
             session_start();
 
             if($loginState) {
                 $_SESSION['logedIn'] = true;
-                $_SESSION['username'] = $username;
-                header("Location: /gallery");
+                $_SESSION['email'] = $email;
+                $_SESSION['uid'] = $userRepository->readByEmail($email)->id;
+                header("Location: /user");
             } else {
                 $_SESSION['info'] = false;
                 header("Location: /user/login");

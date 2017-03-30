@@ -13,14 +13,14 @@ class GalleryRepository extends Repository {
 
     protected $tableName = 'galleries';
 
-    public function create($username, $email, $password)
+    public function create($name, $user_id)
     {
         session_start();
-        if(count($this->readByUsername($username)) < 1) {
-            $query = "INSERT INTO $this->tableName (username, email, password) VALUES (?, ?, ?)";
+        if(count($this->readByName($name)) < 1) {
+            $query = "INSERT INTO $this->tableName (user_id, name) VALUES (?, ?)";
 
             $statement = ConnectionHandler::getConnection()->prepare($query);
-            $statement->bind_param('sss', $username, $email, $password);
+            $statement->bind_param('is', $user_id, $name);
 
             if (!$statement->execute()) {
                 throw new Exception($statement->error);
@@ -32,6 +32,26 @@ class GalleryRepository extends Repository {
         } else {
             $_SESSION['isSuccess'] = false;
         }
+    }
+
+    public function readByName($name) {
+        $query = "SELECT * FROM $this->tableName WHERE name = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('s', $name);
+        $statement->execute();
+
+        $result = $statement->get_result();
+        if(!$result) {
+            throw new Exception($statement->error);
+        }
+
+        $rows = array();
+        while($row = $result->fetch_object()) {
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 
 }

@@ -28,14 +28,14 @@ class UserRepository extends Repository
      *
      * @throws Exception falls das Ausführen des Statements fehlschlägt
      */
-    public function create($username, $email, $password)
+    public function create($email, $password)
     {
         session_start();
-        if(count($this->readByUsername($username)) < 1) {
-            $query = "INSERT INTO $this->tableName (username, email, password) VALUES (?, ?, ?)";
+        if(count($this->readByEmail($email)) < 1) {
+            $query = "INSERT INTO $this->tableName (email, password) VALUES (?, ?)";
 
             $statement = ConnectionHandler::getConnection()->prepare($query);
-            $statement->bind_param('sss', $username, $email, $password);
+            $statement->bind_param('ss', $email, $password);
 
             if (!$statement->execute()) {
                 throw new Exception($statement->error);
@@ -49,12 +49,12 @@ class UserRepository extends Repository
         }
     }
 
-    public function readByUsername($username)
+    public function readByEmail($email)
     {
-        $query = "SELECT * FROM $this->tableName WHERE username = ?";
+        $query = "SELECT * FROM $this->tableName WHERE email = ?";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('s', $username);
+        $statement->bind_param('s', $email);
         $statement->execute();
 
         $result = $statement->get_result();
@@ -62,20 +62,18 @@ class UserRepository extends Repository
             throw new Exception($statement->error);
         }
 
-        $rows = array();
-        while($row = $result->fetch_object()) {
-            $rows[] = $row;
-        }
 
-        return $rows;
+        $row = $result->fetch_object();
+
+        return $row;
     }
 
-    public function login($username, $password)
+    public function login($email, $password)
     {
-        $query = "SELECT password FROM $this->tableName WHERE username = ?";
+        $query = "SELECT password FROM $this->tableName WHERE email = ?";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('s', $username);
+        $statement->bind_param('s', $email);
         $statement->execute();
 
         $result = $statement->get_result();

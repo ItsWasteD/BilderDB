@@ -25,8 +25,6 @@ class PictureRepository extends Repository
             throw new Exception($statement->error);
         }
 
-        session_start();
-        $_SESSION['isSuccess'] = true;
 
         return $statement->insert_id;
     }
