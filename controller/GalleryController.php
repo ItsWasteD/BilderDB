@@ -7,40 +7,50 @@
  * Time: 20:02
  */
 require_once '../repository/GalleryRepository.php';
+require_once '../repository/PictureRepository.php';
 
 class GalleryController
 {
 
-    public function index() {
+    public function index()
+    {
+        session_start();
+        if (!isset($_SESSION['logedIn']) && !$_SESSION['logedIn']) {
+            header("Location: /?info=login");
+        }
 
         $galleryRepository = new GalleryRepository();
+        $pictureRepository = new PictureRepository();
+
         $view = new View("gallery_index");
         $view->title = "Gallery";
         $view->style = "/css/gallery.css";
-        session_start();
-        if(isset($_SESSION['isSuccess'])) {
-            if($_SESSION['isSuccess']) {
-                $view->info = true;
-            } else {
-                $view->info = false;
-            }
-            unset($_SESSION['isSuccess']);
-        }
         $view->galleries = $galleryRepository->readAll();
+        $view->picRepo = $pictureRepository;
         $view->display();
     }
 
-    public function add() {
+    public function add()
+    {
+        session_start();
+        if (!isset($_SESSION['logedIn']) && !$_SESSION['logedIn']) {
+            header("Location: /?info=login");
+        }
+
         $view = new View("gallery_add");
         $view->title = "Add";
         $view->display();
     }
 
-    public function doAdd() {
+    public function doAdd()
+    {
+        session_start();
+        if (!isset($_SESSION['logedIn']) && !$_SESSION['logedIn']) {
+            header("Location: /?info=login");
+        }
 
-        if($_POST['send']) {
+        if ($_POST['send']) {
             $galleryRepository = new GalleryRepository();
-            session_start();
 
             $name = $_POST['galleriename'];
             $user_id = $_SESSION['uid'];
@@ -52,49 +62,67 @@ class GalleryController
 
     }
 
-    public function picdoAdd() {
-        $upload_dir = "images/";
-        $upload_file = $upload_dir . basename($_FILES['file']['name']);
-        $upload_ok = 1;
-        $fileType = pathinfo($upload_file, PATHINFO_EXTENSION);
-
-        if(isset($_POST['send'])) {
-            $check = getimagesize($_FILES['file']['tmp_name']);
-            if($check !== false) {
-                $upload_ok = 1;
-            } else {
-                $upload_ok = 0;
-            }
+    public function edit()
+    {
+        session_start();
+        if (!isset($_SESSION['logedIn']) && !$_SESSION['logedIn']) {
+            header("Location: /?info=login");
         }
 
-        if(file_exists($upload_file)) {
-            $upload_ok = 0;
+        $view = new View("gallery_edit");
+        $galleryRepository = new GalleryRepository();
+        $view->gallery = $galleryRepository->readById($_GET['id']);
+        $pictureRepository = new PictureRepository();
+        $view->images = $pictureRepository->readByGalleryId($_GET['id']);
+        $view->title = "Bearbeiten";
+        $view->style = "/css/gallery.css";
+        $view->display();
+    }
+
+    public function delete()
+    {
+        session_start();
+        if (!isset($_SESSION['logedIn']) && !$_SESSION['logedIn']) {
+            header("Location: /?info=login");
         }
 
-        if($fileType != "jpg" && $fileType != "png" && $fileType != "jpeg" && $fileType != "gif") {
-            $upload_ok = 0;
-        }
+        $gallery_id = $_GET['id'];
+        $user_id = $_SESSION['uid'];
 
         $pictureRepository = new PictureRepository();
+        $pics = $pictureRepository->readByGalleryId($gallery_id);
 
-        $pictureRepository->create(1,$upload_file);
-
-        session_start();
-
-        if(!isset($_SESSION['isSuccess'])) {
-            $upload_ok = 0;
-        }
-
-        if($upload_ok == 0) {
-            $_SESSION['info'] = array("danger","Fehler beim Upload!");
-        } else {
-            if(move_uploaded_file($_FILES['file']['tmp_name'], $upload_file)) {
-                $_SESSION['info'] = array("success","Erfolgreich hochgeladen!");
-            } else {
-                $_SESSION['info'] = array("danger","Fehler beim Upload!");
+        if ($this->checkPermission($user_id, $gallery_id)) {
+            foreach ($pics as $pic) {
+                $path = $pic->path;
+                $filepath = substr($path, 1);
+                unlink($filepath);
             }
+
+            $galleryRepository = new GalleryRepository();
+            $galleryRepository->deleteById($gallery_id);
+
+            $_SESSION['info'] = array('success', 'Die Gallerie wurde erfolgreich gelöscht.');
+
+        } else {
+            $_SESSION['info'] = array('danger', 'Der Benutzer hat nicht genügend Rechte.');
         }
 
         header("Location: /gallery");
     }
+
+    private function checkPermission($user_id, $gallery_id)
+    {
+        $galleryRepository = new GalleryRepository();
+        $gallery = $galleryRepository->readById($gallery_id);
+
+        $hasPermition = false;
+
+        if ($gallery->user_id == $user_id) {
+            $hasPermition = true;
+        }
+
+        return $hasPermition;
+    }
+
 }

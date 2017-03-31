@@ -26,11 +26,11 @@ class GalleryRepository extends Repository {
                 throw new Exception($statement->error);
             }
 
-            $_SESSION['isSuccess'] = true;
+            $_SESSION['info'] = array('success',"Gallerie wurde erfolgreich erstellt!");
 
             return $statement->insert_id;
         } else {
-            $_SESSION['isSuccess'] = false;
+            $_SESSION['info'] = array('danger',"Gallerie konnte nicht erstellt werden.");
         }
     }
 
@@ -46,7 +46,26 @@ class GalleryRepository extends Repository {
             throw new Exception($statement->error);
         }
 
+        $row = $result->fetch_object();
+
+        return $row;
+    }
+
+    public function readByUserId($uid)
+    {
+        $query = "SELECT * FROM $this->tableName WHERE user_id = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('i', $uid);
+        $statement->execute();
+
+        $result = $statement->get_result();
+        if(!$result) {
+            throw new Exception($statement->error);
+        }
+
         $rows = array();
+
         while($row = $result->fetch_object()) {
             $rows[] = $row;
         }

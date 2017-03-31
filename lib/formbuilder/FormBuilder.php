@@ -6,3 +6,4 @@ require_once 'FileBuilder.php';
 require_once 'TextBuilder.php';
 require_once 'SubmitBuilder.php';
 require_once 'PasswordBuilder.php';
+require_once 'HiddenBuilder.php';

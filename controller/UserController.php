@@ -9,6 +9,11 @@ class UserController
 {
     public function index()
     {
+        session_start();
+        if(!isset($_SESSION['logedIn']) && !$_SESSION['logedIn']) {
+            header("Location: /?info=login");
+        }
+
         $userRepository = new UserRepository();
 
         $view = new View('user_index');
@@ -46,6 +51,11 @@ class UserController
 
     public function delete()
     {
+        session_start();
+        if(!isset($_SESSION['logedIn']) && !$_SESSION['logedIn']) {
+            header("Location: /?info=login");
+        }
+
         $userRepository = new UserRepository();
         $userRepository->deleteById($_GET['id']);
 

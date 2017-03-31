@@ -14,12 +14,12 @@ class PictureRepository extends Repository
 
     protected $tableName = 'pictures';
 
-    public function create($gallery_id, $path)
+    public function create($gallery_id, $path, $name)
     {
-        $query = "INSERT INTO $this->tableName (gallery_id, path) VALUES (?, ?)";
+        $query = "INSERT INTO $this->tableName (gallery_id, path, name) VALUES (?, ?, ?)";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('is', $gallery_id, $path);
+        $statement->bind_param('iss', $gallery_id, $path, $name);
 
         if (!$statement->execute()) {
             throw new Exception($statement->error);
@@ -27,5 +27,57 @@ class PictureRepository extends Repository
 
 
         return $statement->insert_id;
+    }
+
+    public function readByGalleryId($gallery_id) {
+        $query = "SELECT * FROM $this->tableName WHERE gallery_id = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('i', $gallery_id);
+
+        $statement->execute();
+
+        $result = $statement->get_result();
+        if(!$result) {
+            throw new Exception($statement->error);
+        }
+
+        $rows = array();
+        while($row = $result->fetch_object()) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    public function updateNameById($pic_id, $name) {
+        $query = "UPDATE $this->tableName SET name = ? WHERE id = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('si',$name,$pic_id);
+
+        $status = $statement->execute();
+
+        if(!$status) {
+            throw new Exception($statement->error);
+        }
+    }
+
+    public function countByGalleryId($id) {
+        $query = "SELECT COUNT(*) AS 'anzahl' FROM $this->tableName WHERE gallery_id = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('i',$id);
+
+        $statement->execute();
+
+        $result = $statement->get_result();
+        if(!$result) {
+            throw new Exception($statement->error);
+        }
+
+        $row = $result->fetch_object();
+
+        return $row;
     }
 }

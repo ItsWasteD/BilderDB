@@ -1,10 +1,8 @@
 <?php
-if(isset($info)) {
-    if($info) {
-        echo "<br><div class='alert alert-success'>Gallerie wurde erfolgreich erstellt!</div>";
-    } else {
-        echo "<br><div class='alert alert-danger'>Gallerie konnte nicht erstellt werden.</div>";
-    }
+if(isset($_SESSION['info'])) {
+    $info = $_SESSION['info'];
+    echo "<br><div class='alert alert-$info[0]'>$info[1]</div>";
+    unset($_SESSION['info']);
 }
 
 if(empty($galleries)) { ?>
@@ -14,7 +12,7 @@ if(empty($galleries)) { ?>
     foreach ($galleries as $key => $gallery) {
         if ($gallery->user_id === $_SESSION['uid']) { ?>
             <div class='well'>
-                <a href='/gallery/edit?id=<?= $gallery->id ?>'><?= $gallery->name ?></a>
+                <a href='/gallery/edit?id=<?= $gallery->id ?>'><?= htmlentities($gallery->name) ?> <span class="badge"><?= $picRepo->countByGalleryId($gallery->id)->anzahl ?></span></a>
                 <span onclick='deleteAlert(<?= $gallery->id ?>)' class='glyphicon glyphicon-trash' style="float:right"></span>
             </div>
         <?php }

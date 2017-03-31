@@ -13,6 +13,7 @@
  Date  | Deed 
  :---: | ---
  **24.3.17** | Finished login + start page
+ **30.3.17** |
  
 ## vHOSTS
 
