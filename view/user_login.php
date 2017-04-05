@@ -6,7 +6,7 @@ if(isset($info) && !$info) {
 $form = new Form("/user/doLogin");
 
 echo $form->text()->label('Email')->name('email');
-echo $form->password()->label('Passwort')->name('password');
+echo $form->password()->label('Passwort')->name('password')->placeholder("");
 echo $form->submit()->label('Login')->name('send');
 
 $form->end();

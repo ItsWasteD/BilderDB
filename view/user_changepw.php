@@ -20,11 +20,11 @@ if (isset($_SESSION['info'])) {
     unset($_SESSION['info']);
 }
 
-$form = new Form('/user/doCreate');
+$form = new Form("/user/doChangePassword");
 
-echo $form->text()->label('Email')->name('email')->pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')->placeholder("example@domain.tld");
-echo $form->password()->label('Passwort')->name('password')->onkeyup('checkPW()');
-echo $form->password()->label('Passwort wiederholen')->name('password_repeat')->onkeyup('checkPW()')->placeholder("");
-echo $form->submit()->label('Benutzer erstellen')->name('send');
+echo $form->password()->label("Old Password")->name("old_pw");
+echo $form->password()->label('New passwort')->name('password')->onkeyup('checkPW()');
+echo $form->password()->label('Repeat password')->name('password_repeat')->onkeyup('checkPW()')->placeholder("");
+echo $form->submit()->label('Change password')->name('send');
 
 $form->end();

@@ -1,14 +1,15 @@
-<br>
+
 <?php if (empty($users)): ?>
     <h2 class="well well-bg">Hoopla! Keine User gefunden.</h2>
 <?php else:
-    if (isset($info) && $info) {
-        echo "<div class='alert alert-success'>Der Benutzer wurde erfolgreich erstellt!</div>";
-    } else if (isset($info) && $info != true) {
-        echo "<div class='alert alert-danger'>Der Benutzer existiert bereits!</div>";
+    if (isset($_SESSION['info'])) {
+        $info = $_SESSION['info'];
+        echo "<br><div class='alert alert-$info[0]'>$info[1]</div>";
+        unset($_SESSION['info']);
     }
 
     ?>
+    <h1>Benutzer</h1>
     <div class="panel-group">
     <?php foreach ($users as $user): ?>
 
@@ -16,7 +17,7 @@
         <div class="panel-heading"><?= htmlentities($user->email); ?></div>
         <div class="panel-body">
             <p>In der Datenbank existiert ein User mit der Email: <a href="mailto:<?= htmlentities($user->email); ?>"><?= htmlentities($user->email); ?></a></p>
-            <p><a title="Löschen" href="/user/delete?id=<?= $user->id ?>">Löschen</a></p>
+            <p><a title="Löschen" href="/user/delete?id=<?= htmlentities($user->id) ?>">Löschen</a></p>
         </div>
     </div>
 
