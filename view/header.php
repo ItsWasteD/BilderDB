@@ -24,9 +24,11 @@
         </div>
         <ul class="nav navbar-nav">
             <li <?= $controller == "" ? $slct : ''?>><a href="/">Home</a></li>
+            <?php if(isset($_SESSION['logedIn']) && $_SESSION['logedIn']) { ?>
             <li <?= $controller == "user" ? $slct : ''?>><a href="/user">Benutzer</a></li>
             <li <?= $controller == "gallery" ? $slct : ''?>><a href="/gallery">Gallery</a></li>
             <li <?= $controller == "user/profil" ? $slct : ''?>><a href="/user/profil">Profil</a></li>
+            <?php } ?>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <?php
