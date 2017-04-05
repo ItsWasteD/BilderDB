@@ -128,6 +128,7 @@ class UserController
             $view->info = $_SESSION['info'];
             unset($_SESSION['info']);
         }
+        session_regenerate_id();
         $view->display();
     }
 

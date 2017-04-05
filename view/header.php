@@ -32,6 +32,8 @@
             <?php
             if(!isset($_SESSION)) {
                 session_start();
+            } else {
+                session_regenerate_id();
             }
             if (isset($_SESSION['logedIn']) && $_SESSION['logedIn']) { ?>
                 <p class="navbar-text">Angemeldet als <?= htmlentities($_SESSION['email']) ?></p>
