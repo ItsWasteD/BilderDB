@@ -34,7 +34,12 @@ class UserRepository extends Repository
         if(count($this->readByEmail($email)) < 1) {
             $query = "INSERT INTO $this->tableName (email, password) VALUES (?, ?)";
 
-            $statement = ConnectionHandler::getConnection()->prepare($query);
+            $con = ConnectionHandler::getConnection();
+
+            $email = mysqli_real_escape_string($con, $email);
+            $password = mysqli_real_escape_string($con, $password);
+
+            $statement = $con->prepare($query);
             $statement->bind_param('ss', $email, $password);
 
             if (!$statement->execute()) {
@@ -87,5 +92,23 @@ class UserRepository extends Repository
         }
 
         return password_verify($password, $userPW);
+    }
+
+    public function updatePasswordById($passHash, $uid) {
+        $query = "UPDATE $this->tableName SET password = ? WHERE id = ?";
+
+        $con = ConnectionHandler::getConnection();
+
+        $passHash = mysqli_real_escape_string($con, $passHash);
+        $uid = mysqli_real_escape_string($con, $uid);
+
+        $statement = $con->prepare($query);
+        $statement->bind_param('si',$passHash,$uid);
+        $status = $statement->execute();
+
+        if(!$status) {
+            throw new Exception($statement->error);
+        }
+
     }
 }
