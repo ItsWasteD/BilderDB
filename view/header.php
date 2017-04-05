@@ -20,14 +20,15 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/">DAVID MVC</a>
+            <a class="navbar-brand" href="">DAVID MVC</a>
         </div>
         <ul class="nav navbar-nav">
-            <li <?= $controller == "" ? $slct : ''?>><a href="/">Home</a></li>
             <?php if(isset($_SESSION['logedIn']) && $_SESSION['logedIn']) { ?>
             <li <?= $controller == "user" ? $slct : ''?>><a href="/user">Benutzer</a></li>
             <li <?= $controller == "gallery" ? $slct : ''?>><a href="/gallery">Gallery</a></li>
             <li <?= $controller == "user/profil" ? $slct : ''?>><a href="/user/profil">Profil</a></li>
+            <?php } else { ?>
+            <li <?= $controller == "" ? $slct : ''?>><a href="">Home</a></li>
             <?php } ?>
         </ul>
         <ul class="nav navbar-nav navbar-right">

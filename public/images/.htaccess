@@ -1,4 +1,0 @@
-AuthType Basic
-AuthName "Private!"
-AuthUserFile /images/.htmyblock
-require valid-user

@@ -11,11 +11,14 @@ if (empty($galleries)) { ?>
     echo "<br>";
     foreach ($galleries as $key => $gallery) { ?>
         <div class='well'>
-        <a href='/gallery/edit?id=<?= htmlentities($gallery->id) ?>'><?= htmlentities($gallery->name) ?> <span class="badge"><?= htmlentities($picRepo->countByGalleryId($gallery->id)->anzahl) ?></span></a>
-    <span onclick='deleteAlert(<?= htmlentities($gallery->id) ?>)' class='glyphicon glyphicon-trash' style="float:right"></span>
-    </div>
-    <?php
-}
+            <a href='/gallery/edit?id=<?= htmlentities($gallery->id) ?>'><?= htmlentities($gallery->name) ?> <span
+                        class="badge"><?= htmlentities($picRepo->countByGalleryId($gallery->id)->anzahl) ?></span></a>
+            <a><span onclick='deleteAlert(<?= htmlentities($gallery->id) ?>)' class='glyphicon glyphicon-trash'
+                  style="float:right"></span></a>
+            <a href="/gallery/rename?id=<?= htmlentities($gallery->id) ?>"><span class="glyphicon glyphicon-pencil" style="float: right; margin-right: 10px"></span></a>
+        </div>
+        <?php
+    }
 }
 ?>
 <a href="/gallery/add">

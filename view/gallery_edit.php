@@ -5,7 +5,6 @@
     if(isset($_SESSION['info'])) {
         $info = $_SESSION['info'];
         echo "<br><div class='alert alert-$info[0]'>$info[1]</div>";
-        unset($_SESSION['info']);
     }
     echo "<div class='row'>";
     foreach ($images as $key => $value) {
