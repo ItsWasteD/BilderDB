@@ -69,6 +69,11 @@ class GalleryController
             header("Location: /?info=login");
         }
 
+        if(!$this->checkPermission($_SESSION['uid'],$_GET['id'])) {
+            $_SESSION['info'] = array('danger','You are not allowed to view this gallery!');
+            header("Location: /gallery");
+        }
+
         $view = new View("gallery_edit");
         $galleryRepository = new GalleryRepository();
         $view->gallery = $galleryRepository->readById($_GET['id']);
@@ -117,8 +122,12 @@ class GalleryController
         }
 
         $galleryRepository = new GalleryRepository();
-        $galleryRepository->updatePrevById($_GET['id'], $_GET['gid']);
 
+        if($this->checkPermission($_SESSION['uid'], $_GET['gid'])) {
+            $galleryRepository->updatePrevById($_GET['id'], $_GET['gid']);
+        } else {
+            $_SESSION['info'] = array('danger','Not allowed to change the preview of this gallery!');
+        }
         header("Location: /gallery");
     }
 
@@ -134,6 +143,16 @@ class GalleryController
         }
 
         return $hasPermition;
+    }
+
+    public function rename() {
+        session_start();
+        if (!isset($_SESSION['logedIn']) && !$_SESSION['logedIn']) {
+            header("Location: /?info=login");
+        }
+
+
+
     }
 
 }

@@ -13,7 +13,7 @@
  Date  | Deed 
  :---: | ---
  **24.3.17** | Finished login + start page
- **30.3.17** |
+ **30.3.17** | Add galleries, gallery edit screen, delete galleries, check gallery permission
  
 ## vHOSTS
 
