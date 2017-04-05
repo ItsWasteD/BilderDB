@@ -14,6 +14,12 @@
  :---: | ---
  **24.3.17** | Finished login + start page
  **30.3.17** | Add galleries, gallery edit screen, delete galleries, check gallery permission
+ **30.3.17** | Show pictures, add pictures, rename pictures, check picture permission
+ **30.3.17** | Added hidden builder (input type=hidden) with a name and value
+ **30.3.17** | Added some pictures + galleries + users
+ **30.3.17** | Added readByUserId($uid) in galleryrepository
+ **30.3.17** | Added readByGalleryId() and updateNameById() and countByGalleryId in PicRepo
+ **5.4.17** | TODO 
  
 ## vHOSTS
 
