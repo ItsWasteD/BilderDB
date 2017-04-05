@@ -38,13 +38,15 @@ class PictureController
             $name = $_POST['name'];
             $gallery_id = $_POST['gallery_id'];
 
+            $unique_name = uniqid(true);
+
+            $fileType = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+            $unique_name .= "." . $fileType;
+
             $upload_dir = "images/";
-            $db_dir = "/images/" . basename($_FILES['file']['name']);
+            $db_dir = "/images/" . $unique_name;
 
-            $upload_file = $upload_dir . basename($_FILES['file']['name']);
-            $fileType = pathinfo($upload_file, PATHINFO_EXTENSION);
-
-            echo $fileType;
+            $upload_file = $upload_dir . $unique_name;
 
             $upload_ok = 1;
 
@@ -91,6 +93,7 @@ class PictureController
         $view->title = "Bild bearbeiten";
         $pictureRepository = new PictureRepository();
         $view->image = $pictureRepository->readById($_GET['pic_id']);
+        $view->gid = $_GET['gid'];
         $view->display();
     }
 
@@ -135,11 +138,33 @@ class PictureController
 
     }
 
+    public function delete() {
+        session_start();
+        if (!isset($_SESSION['logedIn']) && !$_SESSION['logedIn']) {
+            header("Location: /?info=login");
+        }
+
+        $pic_id = $_GET['id'];
+        $pictureRepository = new PictureRepository();
+        $path = $pictureRepository->readById($pic_id)->path;
+
+        if($this->checkPermission($_SESSION['uid'],$pic_id)) {
+            $srv_path = substr($path,1);
+            $pictureRepository->deleteById($pic_id);
+            unlink($srv_path);
+            $_SESSION['info'] = array('success','Das Bild wurde erfolgreich gelöscht.');
+        } else {
+            $_SESSION['info'] = array('danger','Der Benutzer hat nicht genügend Rechte.');
+        }
+
+        header("Location: /gallery");
+    }
+
     private function checkPermission($user_id, $pic_id) {
         $galleryRepository = new GalleryRepository();
         $galleries = $galleryRepository->readByUserId($user_id);
 
-        $hasPermition = false;
+        $hasPermission = false;
 
         $pictureRepository = new PictureRepository();
         foreach ($galleries as $gallery) {
@@ -147,11 +172,11 @@ class PictureController
             foreach ($pictures as $picture) {
                 $db_pic_id = $picture->id;
                 if($db_pic_id == $pic_id) {
-                    $hasPermition = true;
+                    $hasPermission = true;
                 }
             }
         }
 
-        return $hasPermition;
+        return $hasPermission;
     }
 }
