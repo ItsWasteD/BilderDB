@@ -19,7 +19,12 @@ class GalleryRepository extends Repository {
         if(count($this->readByName($name)) < 1) {
             $query = "INSERT INTO $this->tableName (user_id, name) VALUES (?, ?)";
 
-            $statement = ConnectionHandler::getConnection()->prepare($query);
+            $con = ConnectionHandler::getConnection();
+
+            $name = mysqli_real_escape_string($con, $name);
+            $user_id = mysqli_real_escape_string($con, $user_id);
+
+            $statement = $con->prepare($query);
             $statement->bind_param('is', $user_id, $name);
 
             if (!$statement->execute()) {
@@ -71,6 +76,24 @@ class GalleryRepository extends Repository {
         }
 
         return $rows;
+    }
+
+    public function updatePrevById($prev_id,$id) {
+        $query = "UPDATE $this->tableName SET preview_id = ? WHERE id = ?";
+
+        $con = ConnectionHandler::getConnection();
+
+        $prev_id = mysqli_real_escape_string($con, $prev_id);
+        $id = mysqli_real_escape_string($con, $id);
+
+        $statement = $con->prepare($query);
+        $statement->bind_param('ii',$prev_id,$id);
+        $status = $statement->execute();
+
+        if(!$status) {
+            throw new Exception($statement->error);
+        }
+
     }
 
 }

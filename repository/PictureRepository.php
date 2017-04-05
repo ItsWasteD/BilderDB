@@ -18,7 +18,13 @@ class PictureRepository extends Repository
     {
         $query = "INSERT INTO $this->tableName (gallery_id, path, name) VALUES (?, ?, ?)";
 
-        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $con = ConnectionHandler::getConnection();
+
+        $gallery_id = mysqli_real_escape_string($con, $gallery_id);
+        $path = mysqli_real_escape_string($con, $path);
+        $name = mysqli_real_escape_string($con, $name);
+
+        $statement = $con->prepare($query);
         $statement->bind_param('iss', $gallery_id, $path, $name);
 
         if (!$statement->execute()) {
@@ -53,7 +59,12 @@ class PictureRepository extends Repository
     public function updateNameById($pic_id, $name) {
         $query = "UPDATE $this->tableName SET name = ? WHERE id = ?";
 
-        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $con = ConnectionHandler::getConnection();
+
+        $pic_id = mysqli_real_escape_string($con, $pic_id);
+        $name = mysqli_real_escape_string($con, $name);
+
+        $statement = $con->prepare($query);
         $statement->bind_param('si',$name,$pic_id);
 
         $status = $statement->execute();
