@@ -23,9 +23,9 @@ class GalleryController
         $pictureRepository = new PictureRepository();
 
         $view = new View("gallery_index");
-        $view->title = "Gallery";
+        $view->title = "Gallerien";
         $view->style = "/css/gallery.css";
-        $view->galleries = $galleryRepository->readAll();
+        $view->galleries = $galleryRepository->readByUserId($_SESSION['uid']);
         $view->picRepo = $pictureRepository;
         $view->display();
     }
@@ -74,8 +74,7 @@ class GalleryController
         $view->gallery = $galleryRepository->readById($_GET['id']);
         $pictureRepository = new PictureRepository();
         $view->images = $pictureRepository->readByGalleryId($_GET['id']);
-        $view->title = "Bearbeiten";
-        $view->style = "/css/gallery.css";
+        $view->title = "Gallerie";
         $view->display();
     }
 
@@ -107,6 +106,18 @@ class GalleryController
         } else {
             $_SESSION['info'] = array('danger', 'Der Benutzer hat nicht genügend Rechte.');
         }
+
+        header("Location: /gallery");
+    }
+
+    public function setBg() {
+        session_start();
+        if (!isset($_SESSION['logedIn']) && !$_SESSION['logedIn']) {
+            header("Location: /?info=login");
+        }
+
+        $galleryRepository = new GalleryRepository();
+        $galleryRepository->updatePrevById($_GET['id'], $_GET['gid']);
 
         header("Location: /gallery");
     }
